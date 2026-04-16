@@ -99,19 +99,22 @@ export function SelectionOverlay({
           </button>
         ))}
         {showSwapButton ? (
-          <button
-            type="button"
-            className="selection-overlay__button overlay-swap"
-            onClick={onSwap}
-            aria-label="swap date dice"
-          >
-            <img
-              src="/swap.svg"
-              alt=""
-              aria-hidden="true"
-              className="selection-overlay__icon"
-            />
-          </button>
+          <div className="overlay-swap-group">
+            <p className="overlay-swap-label">Swap Dates</p>
+            <button
+              type="button"
+              className="selection-overlay__button overlay-swap"
+              onClick={onSwap}
+              aria-label="swap date dice"
+            >
+              <img
+                src="/swap.svg"
+                alt=""
+                aria-hidden="true"
+                className="selection-overlay__icon"
+              />
+            </button>
+          </div>
         ) : null}
         <button
           type="button"
