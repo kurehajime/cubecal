@@ -5,7 +5,7 @@ import { DiceScene } from './DiceScene'
 export function SceneCanvas() {
   return (
     <Canvas
-      camera={{ position: [4.9, 3.05, 9.2], fov: 23 }}
+      camera={{ position: [2.25, 3.25, 12.1], fov: 29.5 }}
       shadows
       dpr={[1, 1.75]}
     >
@@ -34,11 +34,11 @@ export function SceneCanvas() {
       <OrbitControls
         enableDamping
         enablePan={false}
-        maxDistance={12}
-        minDistance={6}
+        maxDistance={15.5}
+        minDistance={7}
         minPolarAngle={0.78}
         maxPolarAngle={1.08}
-        target={[0.15, -0.16, 0]}
+        target={[0, -0.12, 0]}
       />
     </Canvas>
   )

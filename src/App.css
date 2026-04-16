@@ -1,42 +1,13 @@
 .app-shell {
+  align-items: center;
   display: grid;
-  gap: 1.5rem;
-  grid-template-rows: auto minmax(420px, 1fr);
+  justify-items: center;
   min-height: 100svh;
-  padding: 1.5rem;
-}
-
-.app-copy {
-  display: grid;
-  gap: 0.85rem;
-  max-width: 40rem;
-}
-
-.app-eyebrow {
-  color: #7c5e44;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
-.app-copy h1 {
-  color: #2c2017;
-  font-size: clamp(2.5rem, 5vw, 4.75rem);
-  letter-spacing: -0.04em;
-  line-height: 0.95;
-  margin: 0;
-}
-
-.app-lead {
-  color: #5b4b40;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.65;
-  margin: 0;
+  padding: 1.25rem;
 }
 
 .scene-panel {
+  aspect-ratio: 3 / 4;
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.78), transparent 48%),
     linear-gradient(180deg, rgba(255, 250, 244, 0.92), rgba(216, 200, 181, 0.88));
@@ -45,9 +16,11 @@
   box-shadow:
     0 24px 60px rgba(69, 39, 18, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  min-height: 420px;
+  max-height: calc(100svh - 2.5rem);
+  min-height: auto;
   overflow: hidden;
   position: relative;
+  width: min(calc((100svh - 2.5rem) * 0.75), calc(100vw - 2.5rem), 42rem);
 }
 
 .scene-panel canvas {
@@ -58,12 +31,11 @@
 
 @media (max-width: 720px) {
   .app-shell {
-    gap: 1rem;
-    grid-template-rows: auto minmax(360px, 1fr);
     padding: 1rem;
   }
 
   .scene-panel {
-    min-height: 360px;
+    max-height: none;
+    width: min(calc((100svh - 2rem) * 0.75), calc(100vw - 2rem));
   }
 }
