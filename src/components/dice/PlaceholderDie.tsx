@@ -6,12 +6,14 @@ import { RoundedBox } from '@react-three/drei'
 import { DiceFaceLabels } from './DiceFaceLabels'
  
 type PlaceholderDieProps = {
+  basePositionValue: [number, number, number]
   definition: DiceDefinition
   isSelected: boolean
   onSelect: (diceId: DiceDefinition['id']) => void
 }
 
 export function PlaceholderDie({
+  basePositionValue,
   definition,
   isSelected,
   onSelect,
@@ -19,8 +21,8 @@ export function PlaceholderDie({
   const groupRef = useRef<Group>(null)
 
   const basePosition = useMemo(
-    () => new Vector3(...definition.placement.basePosition),
-    [definition.placement.basePosition],
+    () => new Vector3(...basePositionValue),
+    [basePositionValue],
   )
   const selectedPosition = useMemo(() => new Vector3(0.32, 1.92, 1.72), [])
   const baseQuaternion = useMemo(

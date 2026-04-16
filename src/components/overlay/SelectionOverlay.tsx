@@ -1,3 +1,5 @@
+import type { DiceKind } from '../../features/calendar/model/types'
+
 export type RotationAction =
   | 'tiltUp'
   | 'tiltDown'
@@ -7,9 +9,10 @@ export type RotationAction =
   | 'spinCw'
 
 type SelectionOverlayProps = {
-  selectedDiceId: string | null
+  selectedDiceId: DiceKind | null
   onConfirm: () => void
   onRotate: (action: RotationAction) => void
+  onSwap: () => void
 }
 
 const overlayButtons: {
@@ -67,10 +70,14 @@ export function SelectionOverlay({
   selectedDiceId,
   onConfirm,
   onRotate,
+  onSwap,
 }: SelectionOverlayProps) {
   if (!selectedDiceId) {
     return null
   }
+
+  const showSwapButton =
+    selectedDiceId === 'dateTens' || selectedDiceId === 'dateOnes'
 
   return (
     <div className="selection-overlay" aria-live="polite">
@@ -91,6 +98,21 @@ export function SelectionOverlay({
             />
           </button>
         ))}
+        {showSwapButton ? (
+          <button
+            type="button"
+            className="selection-overlay__button overlay-swap"
+            onClick={onSwap}
+            aria-label="swap date dice"
+          >
+            <img
+              src="/swap.svg"
+              alt=""
+              aria-hidden="true"
+              className="selection-overlay__icon"
+            />
+          </button>
+        ) : null}
         <button
           type="button"
           className="selection-overlay__button selection-overlay__confirm"

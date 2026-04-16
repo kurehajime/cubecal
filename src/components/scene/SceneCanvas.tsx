@@ -4,11 +4,13 @@ import { OrbitControls } from '@react-three/drei'
 import { DiceScene } from './DiceScene'
 
 type SceneCanvasProps = {
+  isDateDiceSwapped: boolean
   selectedDiceId: DiceKind | null
   onSelectDice: (diceId: DiceKind | null) => void
 }
 
 export function SceneCanvas({
+  isDateDiceSwapped,
   selectedDiceId,
   onSelectDice,
 }: SceneCanvasProps) {
@@ -41,6 +43,7 @@ export function SceneCanvas({
         position={[-6, 3, -4]}
       />
       <DiceScene
+        isDateDiceSwapped={isDateDiceSwapped}
         onSelectDice={onSelectDice}
         selectedDiceId={selectedDiceId}
       />

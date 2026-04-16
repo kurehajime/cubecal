@@ -6,11 +6,13 @@ import { CalendarBase } from '../stage/CalendarBase'
 import { diceDefinitions } from '../../features/calendar/model/definitions'
 
 type DiceSceneProps = {
+  isDateDiceSwapped: boolean
   selectedDiceId: DiceKind | null
   onSelectDice: (diceId: DiceKind) => void
 }
 
 export function DiceScene({
+  isDateDiceSwapped,
   selectedDiceId,
   onSelectDice,
 }: DiceSceneProps) {
@@ -21,6 +23,11 @@ export function DiceScene({
           <CalendarBase />
           {diceDefinitions.map((definition) => (
             <PlaceholderDie
+              basePositionValue={
+                isDateDiceSwapped
+                  ? getSwappedBasePosition(definition.id)
+                  : definition.placement.basePosition
+              }
               key={definition.id}
               definition={definition}
               isSelected={selectedDiceId === definition.id}
@@ -39,4 +46,29 @@ export function DiceScene({
       />
     </>
   )
+}
+
+function getSwappedBasePosition(diceId: DiceKind) {
+  const dateTens = diceDefinitions.find((definition) => definition.id === 'dateTens')
+  const dateOnes = diceDefinitions.find((definition) => definition.id === 'dateOnes')
+
+  if (!dateTens || !dateOnes) {
+    throw new Error('Date dice definitions are missing')
+  }
+
+  if (diceId === 'dateTens') {
+    return dateOnes.placement.basePosition
+  }
+
+  if (diceId === 'dateOnes') {
+    return dateTens.placement.basePosition
+  }
+
+  const definition = diceDefinitions.find((item) => item.id === diceId)
+
+  if (!definition) {
+    throw new Error(`Unknown dice id: ${diceId}`)
+  }
+
+  return definition.placement.basePosition
 }
