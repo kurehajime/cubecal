@@ -55,7 +55,7 @@ export const diceDefinitions: DiceDefinition[] = [
   {
     id: 'month',
     kind: 'month',
-    color: '#ef6b7a',
+    color: '#69b012',
     faces: diceFaceLabelsByKind.month,
     placement: {
       basePosition: [-1.62, 0.54, 0.02],
@@ -66,7 +66,7 @@ export const diceDefinitions: DiceDefinition[] = [
   {
     id: 'weekday',
     kind: 'weekday',
-    color: '#f1d439',
+    color: '#1390d0',
     faces: diceFaceLabelsByKind.weekday,
     placement: {
       basePosition: [-0.54, 0.54, 0.02],
@@ -77,7 +77,7 @@ export const diceDefinitions: DiceDefinition[] = [
   {
     id: 'dateTens',
     kind: 'dateTens',
-    color: '#39a4df',
+    color: '#e68302',
     faces: diceFaceLabelsByKind.dateTens,
     placement: {
       basePosition: [0.54, 0.54, 0.02],
@@ -88,7 +88,7 @@ export const diceDefinitions: DiceDefinition[] = [
   {
     id: 'dateOnes',
     kind: 'dateOnes',
-    color: '#45a9e5',
+    color: '#f8bb13',
     faces: diceFaceLabelsByKind.dateOnes,
     placement: {
       basePosition: [1.62, 0.54, 0.02],
