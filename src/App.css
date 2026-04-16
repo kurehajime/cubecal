@@ -75,6 +75,33 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
+.selection-overlay__icon {
+  display: block;
+  height: 54%;
+  object-fit: contain;
+  width: 54%;
+}
+
+.overlay-icon-up {
+  transform: rotate(180deg);
+}
+
+.overlay-icon-left {
+  transform: rotate(90deg);
+}
+
+.overlay-icon-right {
+  transform: rotate(-90deg);
+}
+
+.overlay-icon-spin-left {
+  transform: scaleX(-1);
+}
+
+.selection-overlay__icon--confirm {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
 .overlay-up {
   left: 50%;
   top: -23%;

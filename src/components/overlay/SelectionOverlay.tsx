@@ -15,14 +15,52 @@ type SelectionOverlayProps = {
 const overlayButtons: {
   action: RotationAction
   className: string
+  iconClassName?: string
+  iconSrc: string
   label: string
 }[] = [
-  { action: 'tiltUp', className: 'overlay-up', label: '↑' },
-  { action: 'tiltDown', className: 'overlay-down', label: '↓' },
-  { action: 'tiltLeft', className: 'overlay-left', label: '←' },
-  { action: 'tiltRight', className: 'overlay-right', label: '→' },
-  { action: 'spinCcw', className: 'overlay-spin-left', label: '↺' },
-  { action: 'spinCw', className: 'overlay-spin-right', label: '↻' },
+  {
+    action: 'tiltUp',
+    className: 'overlay-up',
+    iconClassName: 'overlay-icon-up',
+    iconSrc: '/down_arrow.svg',
+    label: 'rotate up',
+  },
+  {
+    action: 'tiltDown',
+    className: 'overlay-down',
+    iconClassName: 'overlay-icon-down',
+    iconSrc: '/down_arrow.svg',
+    label: 'rotate down',
+  },
+  {
+    action: 'tiltLeft',
+    className: 'overlay-left',
+    iconClassName: 'overlay-icon-left',
+    iconSrc: '/down_arrow.svg',
+    label: 'rotate left',
+  },
+  {
+    action: 'tiltRight',
+    className: 'overlay-right',
+    iconClassName: 'overlay-icon-right',
+    iconSrc: '/down_arrow.svg',
+    label: 'rotate right',
+  },
+  {
+    action: 'spinCcw',
+    className: 'overlay-spin-left',
+    iconClassName: 'overlay-icon-spin-left',
+    iconSrc: '/rigit_spin.svg',
+    label: 'spin counterclockwise',
+  },
+  {
+    action: 'spinCw',
+    className: 'overlay-spin-right',
+    iconClassName: 'overlay-icon-spin-right',
+    iconSrc: '/rigit_spin.svg',
+    label: 'spin clockwise',
+  },
 ]
 
 export function SelectionOverlay({
@@ -43,9 +81,14 @@ export function SelectionOverlay({
             type="button"
             className={`selection-overlay__button ${button.className}`}
             onClick={() => onRotate(button.action)}
-            aria-label={button.action}
+            aria-label={button.label}
           >
-            {button.label}
+            <img
+              src={button.iconSrc}
+              alt=""
+              aria-hidden="true"
+              className={`selection-overlay__icon ${button.iconClassName ?? ''}`}
+            />
           </button>
         ))}
         <button
@@ -54,7 +97,12 @@ export function SelectionOverlay({
           onClick={onConfirm}
           aria-label="confirm selection"
         >
-          ✓
+          <img
+            src="/check.svg"
+            alt=""
+            aria-hidden="true"
+            className="selection-overlay__icon selection-overlay__icon--confirm"
+          />
         </button>
       </div>
     </div>
