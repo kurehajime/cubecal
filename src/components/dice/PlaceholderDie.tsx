@@ -1,6 +1,7 @@
 import type { DiceDefinition } from '../../features/calendar/model/types'
 import { RoundedBox } from '@react-three/drei'
 import { RigidBody } from '@react-three/rapier'
+import { DiceFaceLabels } from './DiceFaceLabels'
  
 type PlaceholderDieProps = {
   definition: DiceDefinition
@@ -28,6 +29,7 @@ export function PlaceholderDie({
           roughness={0.35}
         />
       </RoundedBox>
+      <DiceFaceLabels faces={definition.faces} />
     </RigidBody>
   )
 }
