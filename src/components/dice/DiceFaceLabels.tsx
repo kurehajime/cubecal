@@ -79,9 +79,9 @@ function createFaceTexture(label: string) {
 
   const lines = label.split('/')
   const isNumeric = lines.length === 1 && /^\d+$/.test(lines[0])
+  const isSplitLabel = lines.length === 2
   const maxWidth = isNumeric ? 456 : 428
-  const maxHeight = isNumeric ? 442 : 410
-  const lineHeightRatio = lines.length > 1 ? 0.82 : 1
+  const maxHeight = isNumeric ? 442 : isSplitLabel ? 400 : 410
   let fontSize = isNumeric ? 380 : 320
 
   while (fontSize > 88) {
@@ -90,8 +90,11 @@ function createFaceTexture(label: string) {
     const widestLine = Math.max(
       ...lines.map((line) => context.measureText(line).width),
     )
-    const lineHeight = fontSize * lineHeightRatio
-    const totalHeight = fontSize + (lines.length - 1) * lineHeight
+    const separatorGap = isSplitLabel ? fontSize * 0.08 : 0
+    const separatorThickness = isSplitLabel ? Math.max(10, fontSize * 0.06) : 0
+    const totalHeight = isSplitLabel
+      ? fontSize * 2 + separatorGap * 2 + separatorThickness
+      : fontSize
 
     if (widestLine <= maxWidth && totalHeight <= maxHeight) {
       break
@@ -100,15 +103,33 @@ function createFaceTexture(label: string) {
     fontSize -= 4
   }
 
-  const lineHeight = fontSize * lineHeightRatio
-  const totalHeight = fontSize + (lines.length - 1) * lineHeight
-  const centerY = 256 - totalHeight / 2 + fontSize / 2
-
   context.font = `400 ${fontSize}px "Archivo Black"`
 
-  lines.forEach((line, index) => {
-    context.fillText(line, 256, centerY + index * lineHeight)
-  })
+  if (isSplitLabel) {
+    const separatorGap = fontSize * 0.08
+    const separatorThickness = Math.max(10, fontSize * 0.06)
+    const separatorWidth = Math.min(
+      maxWidth,
+      Math.max(...lines.map((line) => context.measureText(line).width)) + 20,
+    )
+    const upperY = 256 - (separatorThickness / 2 + separatorGap + fontSize / 2)
+    const lowerY = 256 + (separatorThickness / 2 + separatorGap + fontSize / 2)
+
+    context.fillText(lines[0], 256, upperY)
+    context.fillRect(
+      256 - separatorWidth / 2,
+      256 - separatorThickness / 2,
+      separatorWidth,
+      separatorThickness,
+    )
+    context.save()
+    context.translate(256, lowerY)
+    context.scale(1, -1)
+    context.fillText(lines[1], 0, 0)
+    context.restore()
+  } else {
+    context.fillText(lines[0], 256, 256)
+  }
 
   const texture = new CanvasTexture(canvas)
   texture.colorSpace = SRGBColorSpace
