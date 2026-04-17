@@ -47,7 +47,7 @@ export function DiceScene({
         blur={2.2}
         color="#3d3025"
         opacity={0.25}
-        position={[0, -0.92, 0]}
+        position={[0, -1.445, 0]}
         scale={12}
       />
     </>

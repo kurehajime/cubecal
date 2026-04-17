@@ -34,14 +34,16 @@ export function SceneCanvas({
         castShadow
         intensity={2.2}
         position={[5, 8, 9]}
-        shadow-mapSize-width={2048}
-        shadow-mapSize-height={2048}
+        shadow-bias={-0.00035}
+        shadow-normalBias={0.02}
+        shadow-mapSize-width={4096}
+        shadow-mapSize-height={4096}
         shadow-camera-near={1}
-        shadow-camera-far={30}
-        shadow-camera-top={10}
-        shadow-camera-right={10}
-        shadow-camera-bottom={-10}
-        shadow-camera-left={-10}
+        shadow-camera-far={20}
+        shadow-camera-top={2.8}
+        shadow-camera-right={4.4}
+        shadow-camera-bottom={-2.6}
+        shadow-camera-left={-4.4}
       />
       <directionalLight
         intensity={0.45}
