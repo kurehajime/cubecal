@@ -1,15 +1,20 @@
-import type { DiceKind } from '../../features/calendar/model/types'
+import type {
+  DiceKind,
+  DiceRuntimeState,
+} from '../../features/calendar/model/types'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { DiceScene } from './DiceScene'
 
 type SceneCanvasProps = {
+  diceStates: Record<DiceKind, DiceRuntimeState>
   isDateDiceSwapped: boolean
   selectedDiceId: DiceKind | null
   onSelectDice: (diceId: DiceKind | null) => void
 }
 
 export function SceneCanvas({
+  diceStates,
   isDateDiceSwapped,
   selectedDiceId,
   onSelectDice,
@@ -43,6 +48,7 @@ export function SceneCanvas({
         position={[-6, 3, -4]}
       />
       <DiceScene
+        diceStates={diceStates}
         isDateDiceSwapped={isDateDiceSwapped}
         onSelectDice={onSelectDice}
         selectedDiceId={selectedDiceId}

@@ -1,12 +1,7 @@
-import type { DiceKind } from '../../features/calendar/model/types'
-
-export type RotationAction =
-  | 'tiltUp'
-  | 'tiltDown'
-  | 'tiltLeft'
-  | 'tiltRight'
-  | 'spinCcw'
-  | 'spinCw'
+import type {
+  DiceKind,
+  RotationAction,
+} from '../../features/calendar/model/types'
 
 type SelectionOverlayProps = {
   selectedDiceId: DiceKind | null

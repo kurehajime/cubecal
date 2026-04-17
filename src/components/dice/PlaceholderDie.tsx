@@ -9,6 +9,7 @@ type PlaceholderDieProps = {
   basePositionValue: [number, number, number]
   definition: DiceDefinition
   isSelected: boolean
+  orientationValue: [number, number, number, number]
   onSelect: (diceId: DiceDefinition['id']) => void
 }
 
@@ -16,6 +17,7 @@ export function PlaceholderDie({
   basePositionValue,
   definition,
   isSelected,
+  orientationValue,
   onSelect,
 }: PlaceholderDieProps) {
   const groupRef = useRef<Group>(null)
@@ -30,15 +32,24 @@ export function PlaceholderDie({
       new Quaternion().setFromEuler(new Euler(...definition.placement.baseRotation)),
     [definition.placement.baseRotation],
   )
+  const orientationQuaternion = useMemo(
+    () => new Quaternion(...orientationValue),
+    [orientationValue],
+  )
+  const targetQuaternion = useMemo(() => new Quaternion(), [])
+  const initialPosition = useRef(basePosition.clone())
+  const initialQuaternion = useRef(
+    baseQuaternion.clone().multiply(orientationQuaternion),
+  )
 
   useEffect(() => {
     if (!groupRef.current) {
       return
     }
 
-    groupRef.current.position.copy(basePosition)
-    groupRef.current.quaternion.copy(baseQuaternion)
-  }, [basePosition, baseQuaternion])
+    groupRef.current.position.copy(initialPosition.current)
+    groupRef.current.quaternion.copy(initialQuaternion.current)
+  }, [])
 
   useFrame(({ camera }, delta) => {
     if (!groupRef.current) {
@@ -47,7 +58,9 @@ export function PlaceholderDie({
 
     const damping = 1 - Math.exp(-delta * 8)
     const targetPosition = isSelected ? selectedPosition : basePosition
-    const targetQuaternion = isSelected ? camera.quaternion : baseQuaternion
+    targetQuaternion
+      .copy(isSelected ? camera.quaternion : baseQuaternion)
+      .multiply(orientationQuaternion)
 
     groupRef.current.position.lerp(targetPosition, damping)
     groupRef.current.quaternion.slerp(targetQuaternion, damping)

@@ -25,6 +25,14 @@ export type QuarterTurnVector = {
   z: QuarterTurn
 }
 
+export type RotationAction =
+  | 'tiltUp'
+  | 'tiltDown'
+  | 'tiltLeft'
+  | 'tiltRight'
+  | 'spinCcw'
+  | 'spinCw'
+
 export type DiceFaceLabels = Record<CubeFace, string>
 
 export type DicePlacement = {
