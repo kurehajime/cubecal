@@ -78,7 +78,7 @@ export function PlaceholderDie({
         args={[1, 1, 1]}
         castShadow
         receiveShadow
-        radius={0.08}
+        radius={0.05}
         smoothness={6}
       >
         <meshStandardMaterial
