@@ -1,12 +1,22 @@
 .app-shell {
+  --frame-padding: 1.25rem;
+  --panel-height-limit: calc(100dvh - (var(--frame-padding) * 2));
+  --panel-width-limit: calc(100vw - (var(--frame-padding) * 2));
+  --panel-width: min(
+    calc(var(--panel-height-limit) * 0.75),
+    var(--panel-width-limit),
+    42rem
+  );
   align-items: center;
   display: grid;
   justify-items: center;
-  min-height: 100svh;
-  padding: 1.25rem;
+  min-height: 100dvh;
+  padding: var(--frame-padding);
 }
 
 .scene-panel {
+  --overlay-cluster-size: min(24rem, calc(var(--panel-width) * 0.68));
+  --overlay-button-size: min(6.3rem, calc(var(--overlay-cluster-size) * 0.2625));
   aspect-ratio: 3 / 4;
   background:
     radial-gradient(circle at top, rgba(255, 255, 255, 0.78), transparent 48%),
@@ -16,11 +26,11 @@
   box-shadow:
     0 24px 60px rgba(69, 39, 18, 0.12),
     inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  max-height: calc(100svh - 2.5rem);
+  max-height: var(--panel-height-limit);
   min-height: auto;
   overflow: hidden;
   position: relative;
-  width: min(calc((100svh - 2.5rem) * 0.75), calc(100vw - 2.5rem), 42rem);
+  width: var(--panel-width);
 }
 
 .scene-panel canvas {
@@ -36,13 +46,13 @@
 }
 
 .selection-overlay__cluster {
-  height: min(24rem, 68vw);
+  height: var(--overlay-cluster-size);
   left: 50%;
   pointer-events: none;
   position: absolute;
   top: 56%;
   transform: translate(-50%, -50%);
-  width: min(24rem, 68vw);
+  width: var(--overlay-cluster-size);
 }
 
 .selection-overlay__button {
@@ -53,16 +63,16 @@
   color: #2b2017;
   cursor: pointer;
   display: inline-flex;
-  font-size: clamp(2.2rem, 3.8vw, 3rem);
+  font-size: min(3rem, calc(var(--overlay-button-size) * 0.46));
   font-weight: 700;
-  height: clamp(5.4rem, 13.5vw, 6.8rem);
+  height: var(--overlay-button-size);
   justify-content: center;
   pointer-events: auto;
   position: absolute;
   transition:
     box-shadow 120ms ease,
     background-color 120ms ease;
-  width: clamp(5.4rem, 13.5vw, 6.8rem);
+  width: var(--overlay-button-size);
 }
 
 .selection-overlay__button:hover {
@@ -162,17 +172,6 @@
 
 @media (max-width: 720px) {
   .app-shell {
-    padding: 1rem;
-  }
-
-  .scene-panel {
-    max-height: none;
-    width: min(calc((100svh - 2rem) * 0.75), calc(100vw - 2rem));
-  }
-
-  .selection-overlay__cluster {
-    height: min(20rem, 72vw);
-    top: 58%;
-    width: min(20rem, 72vw);
+    --frame-padding: 0rem;
   }
 }

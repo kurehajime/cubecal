@@ -23,11 +23,14 @@ html,
 body,
 #root {
   margin: 0;
+  min-width: 0;
   min-height: 100%;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
-  min-width: 320px;
+  overscroll-behavior-x: none;
 }
 
 button,
