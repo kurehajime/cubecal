@@ -8,14 +8,14 @@ import { DiceScene } from './DiceScene'
 
 type SceneCanvasProps = {
   diceStates: Record<DiceKind, DiceRuntimeState>
-  isDateDiceSwapped: boolean
+  diceOrder: DiceKind[]
   selectedDiceId: DiceKind | null
   onSelectDice: (diceId: DiceKind | null) => void
 }
 
 export function SceneCanvas({
   diceStates,
-  isDateDiceSwapped,
+  diceOrder,
   selectedDiceId,
   onSelectDice,
 }: SceneCanvasProps) {
@@ -49,7 +49,7 @@ export function SceneCanvas({
       />
       <DiceScene
         diceStates={diceStates}
-        isDateDiceSwapped={isDateDiceSwapped}
+        diceOrder={diceOrder}
         onSelectDice={onSelectDice}
         selectedDiceId={selectedDiceId}
       />

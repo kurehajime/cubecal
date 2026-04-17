@@ -4,10 +4,13 @@ import type {
 } from '../../features/calendar/model/types'
 
 type SelectionOverlayProps = {
+  canMoveLeft: boolean
+  canMoveRight: boolean
   selectedDiceId: DiceKind | null
   onConfirm: () => void
+  onMoveLeft: () => void
+  onMoveRight: () => void
   onRotate: (action: RotationAction) => void
-  onSwap: () => void
 }
 
 const overlayButtons: {
@@ -62,17 +65,17 @@ const overlayButtons: {
 ]
 
 export function SelectionOverlay({
+  canMoveLeft,
+  canMoveRight,
   selectedDiceId,
   onConfirm,
+  onMoveLeft,
+  onMoveRight,
   onRotate,
-  onSwap,
 }: SelectionOverlayProps) {
   if (!selectedDiceId) {
     return null
   }
-
-  const showSwapButton =
-    selectedDiceId === 'dateTens' || selectedDiceId === 'dateOnes'
 
   return (
     <div className="selection-overlay" aria-live="polite">
@@ -93,24 +96,34 @@ export function SelectionOverlay({
             />
           </button>
         ))}
-        {showSwapButton ? (
-          <div className="overlay-swap-group">
-            <p className="overlay-swap-label">Swap Dates</p>
-            <button
-              type="button"
-              className="selection-overlay__button overlay-swap"
-              onClick={onSwap}
-              aria-label="swap date dice"
-            >
-              <img
-                src="/swap.svg"
-                alt=""
-                aria-hidden="true"
-                className="selection-overlay__icon"
-              />
-            </button>
-          </div>
-        ) : null}
+        <button
+          type="button"
+          className="selection-overlay__button overlay-move-left"
+          onClick={onMoveLeft}
+          aria-label="move dice left"
+          disabled={!canMoveLeft}
+        >
+          <img
+            src="/rigit_move.svg"
+            alt=""
+            aria-hidden="true"
+            className="selection-overlay__icon overlay-icon-move-left"
+          />
+        </button>
+        <button
+          type="button"
+          className="selection-overlay__button overlay-move-right"
+          onClick={onMoveRight}
+          aria-label="move dice right"
+          disabled={!canMoveRight}
+        >
+          <img
+            src="/rigit_move.svg"
+            alt=""
+            aria-hidden="true"
+            className="selection-overlay__icon"
+          />
+        </button>
         <button
           type="button"
           className="selection-overlay__button selection-overlay__confirm"

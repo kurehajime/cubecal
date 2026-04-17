@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
+import { diceKinds } from './features/calendar/model/types'
 import type { DiceKind, RotationAction } from './features/calendar/model/types'
 import {
   cloneOrientation,
@@ -11,8 +12,8 @@ import {
 
 function App() {
   const [diceStates, setDiceStates] = useState(() => createInitialDiceState())
+  const [diceOrder, setDiceOrder] = useState<DiceKind[]>(() => [...diceKinds])
   const [selectedDiceId, setSelectedDiceId] = useState<DiceKind | null>(null)
-  const [isDateDiceSwapped, setIsDateDiceSwapped] = useState(false)
 
   const handleSelectDice = (nextSelectedDiceId: DiceKind | null) => {
     setDiceStates((current) => {
@@ -88,17 +89,53 @@ function App() {
     setSelectedDiceId(null)
   }
 
-  const handleSwap = () => {
-    setIsDateDiceSwapped((current) => !current)
+  const selectedDiceIndex = selectedDiceId ? diceOrder.indexOf(selectedDiceId) : -1
+  const canMoveLeft = selectedDiceIndex > 0
+  const canMoveRight =
+    selectedDiceIndex !== -1 && selectedDiceIndex < diceOrder.length - 1
 
-    if (selectedDiceId === 'dateTens') {
-      handleSelectDice('dateOnes')
+  const moveSelectedDice = (direction: 'left' | 'right') => {
+    if (!selectedDiceId) {
       return
     }
 
-    if (selectedDiceId === 'dateOnes') {
-      handleSelectDice('dateTens')
+    setDiceOrder((current) => {
+      const currentIndex = current.indexOf(selectedDiceId)
+
+      if (currentIndex === -1) {
+        return current
+      }
+
+      const nextIndex = direction === 'left' ? currentIndex - 1 : currentIndex + 1
+
+      if (nextIndex < 0 || nextIndex >= current.length) {
+        return current
+      }
+
+      const nextOrder = [...current]
+      ;[nextOrder[currentIndex], nextOrder[nextIndex]] = [
+        nextOrder[nextIndex],
+        nextOrder[currentIndex],
+      ]
+
+      return nextOrder
+    })
+  }
+
+  const handleMoveLeft = () => {
+    if (!canMoveLeft) {
+      return
     }
+
+    moveSelectedDice('left')
+  }
+
+  const handleMoveRight = () => {
+    if (!canMoveRight) {
+      return
+    }
+
+    moveSelectedDice('right')
   }
 
   return (
@@ -106,15 +143,18 @@ function App() {
       <section className="scene-panel" aria-label="Dice calendar 3D scene">
         <SceneCanvas
           diceStates={diceStates}
-          isDateDiceSwapped={isDateDiceSwapped}
+          diceOrder={diceOrder}
           selectedDiceId={selectedDiceId}
           onSelectDice={handleSelectDice}
         />
         <SelectionOverlay
+          canMoveLeft={canMoveLeft}
+          canMoveRight={canMoveRight}
           selectedDiceId={selectedDiceId}
           onConfirm={handleConfirm}
+          onMoveLeft={handleMoveLeft}
+          onMoveRight={handleMoveRight}
           onRotate={handleRotate}
-          onSwap={handleSwap}
         />
       </section>
     </main>

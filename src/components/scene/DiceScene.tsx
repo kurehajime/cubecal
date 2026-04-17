@@ -10,14 +10,14 @@ import { diceDefinitions } from '../../features/calendar/model/definitions'
 
 type DiceSceneProps = {
   diceStates: Record<DiceKind, DiceRuntimeState>
-  isDateDiceSwapped: boolean
+  diceOrder: DiceKind[]
   selectedDiceId: DiceKind | null
   onSelectDice: (diceId: DiceKind) => void
 }
 
 export function DiceScene({
   diceStates,
-  isDateDiceSwapped,
+  diceOrder,
   selectedDiceId,
   onSelectDice,
 }: DiceSceneProps) {
@@ -28,11 +28,7 @@ export function DiceScene({
           <CalendarBase />
           {diceDefinitions.map((definition) => (
             <PlaceholderDie
-              basePositionValue={
-                isDateDiceSwapped
-                  ? getSwappedBasePosition(definition.id)
-                  : definition.placement.basePosition
-              }
+              basePositionValue={getOrderedBasePosition(definition.id, diceOrder)}
               key={definition.id}
               definition={definition}
               isSelected={selectedDiceId === definition.id}
@@ -58,27 +54,18 @@ export function DiceScene({
   )
 }
 
-function getSwappedBasePosition(diceId: DiceKind) {
-  const dateTens = diceDefinitions.find((definition) => definition.id === 'dateTens')
-  const dateOnes = diceDefinitions.find((definition) => definition.id === 'dateOnes')
+function getOrderedBasePosition(diceId: DiceKind, diceOrder: DiceKind[]) {
+  const slotIndex = diceOrder.indexOf(diceId)
 
-  if (!dateTens || !dateOnes) {
-    throw new Error('Date dice definitions are missing')
+  if (slotIndex === -1) {
+    throw new Error(`Unknown dice id in order: ${diceId}`)
   }
 
-  if (diceId === 'dateTens') {
-    return dateOnes.placement.basePosition
+  const slotDefinition = diceDefinitions[slotIndex]
+
+  if (!slotDefinition) {
+    throw new Error(`Missing slot definition for index: ${slotIndex}`)
   }
 
-  if (diceId === 'dateOnes') {
-    return dateTens.placement.basePosition
-  }
-
-  const definition = diceDefinitions.find((item) => item.id === diceId)
-
-  if (!definition) {
-    throw new Error(`Unknown dice id: ${diceId}`)
-  }
-
-  return definition.placement.basePosition
+  return slotDefinition.placement.basePosition
 }

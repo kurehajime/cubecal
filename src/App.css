@@ -75,6 +75,15 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.82);
 }
 
+.selection-overlay__button:disabled {
+  background: rgba(231, 223, 212, 0.92);
+  box-shadow:
+    0 8px 18px rgba(52, 35, 19, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  cursor: default;
+  opacity: 0.52;
+}
+
 .selection-overlay__icon {
   display: block;
   height: 54%;
@@ -95,6 +104,10 @@
 }
 
 .overlay-icon-spin-left {
+  transform: scaleX(-1);
+}
+
+.overlay-icon-move-left {
   transform: scaleX(-1);
 }
 
@@ -124,32 +137,14 @@
   top: 13%;
 }
 
-.overlay-swap-group {
-  height: clamp(5.4rem, 13.5vw, 6.8rem);
+.overlay-move-left {
+  left: -7%;
+  top: -23%;
+}
+
+.overlay-move-right {
   right: -7%;
   top: -23%;
-  position: absolute;
-  width: clamp(5.4rem, 13.5vw, 6.8rem);
-}
-
-.overlay-swap-label {
-  color: #9a958f;
-  font-family: 'Archivo Black', sans-serif;
-  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
-  left: 50%;
-  letter-spacing: 0.04em;
-  margin: 0;
-  pointer-events: none;
-  position: absolute;
-  text-transform: uppercase;
-  top: -1.5rem;
-  transform: translateX(-50%);
-  white-space: nowrap;
-}
-
-.overlay-swap {
-  left: 0;
-  top: 0;
 }
 
 .overlay-spin-left {
