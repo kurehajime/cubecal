@@ -4,7 +4,12 @@ import type {
 } from '../../features/calendar/model/types'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
+import { useEffect, useRef } from 'react'
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import { DiceScene } from './DiceScene'
+
+const DEFAULT_CAMERA_POSITION: [number, number, number] = [2.25, 3.25, 12.1]
+const DEFAULT_CONTROLS_TARGET: [number, number, number] = [0, -0.28, 0]
 
 type SceneCanvasProps = {
   diceOrientations: Record<DiceKind, DiceOrientation>
@@ -19,9 +24,23 @@ export function SceneCanvas({
   selectedDiceId,
   onSelectDice,
 }: SceneCanvasProps) {
+  const controlsRef = useRef<OrbitControlsImpl | null>(null)
+
+  useEffect(() => {
+    const controls = controlsRef.current
+
+    if (!selectedDiceId || !controls) {
+      return
+    }
+
+    controls.object.position.set(...DEFAULT_CAMERA_POSITION)
+    controls.target.set(...DEFAULT_CONTROLS_TARGET)
+    controls.update()
+  }, [selectedDiceId])
+
   return (
     <Canvas
-      camera={{ position: [2.25, 3.25, 12.1], fov: 29.5 }}
+      camera={{ position: DEFAULT_CAMERA_POSITION, fov: 29.5 }}
       gl={{ alpha: true }}
       shadows
       dpr={[1, 1.75]}
@@ -56,14 +75,16 @@ export function SceneCanvas({
         selectedDiceId={selectedDiceId}
       />
       <OrbitControls
+        ref={controlsRef}
         enableDamping
+        enabled={!selectedDiceId}
         enablePan={false}
         enableZoom={false}
         maxDistance={15.5}
         minDistance={7}
         minPolarAngle={0.78}
         maxPolarAngle={1.08}
-        target={[0, -0.28, 0]}
+        target={DEFAULT_CONTROLS_TARGET}
       />
     </Canvas>
   )
