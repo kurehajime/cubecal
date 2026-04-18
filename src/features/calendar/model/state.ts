@@ -4,9 +4,11 @@ import type {
   DiceDefinition,
   DiceKind,
   DiceOrientation,
-  DiceRuntimeState,
+  PersistedCalendarState,
+  PersistedDiceState,
   QuarterTurnVector,
   RotationAction,
+  SessionCalendarState,
 } from './types'
 
 const QUARTER_TURN_ANGLE = Math.PI / 2
@@ -112,19 +114,41 @@ export function rotateDiceOrientation(
   }
 }
 
-export function createInitialDiceState(): Record<DiceKind, DiceRuntimeState> {
+export function createInitialPersistedCalendarState(): PersistedCalendarState {
+  return {
+    diceOrder: [...diceDefinitions.map((definition) => definition.id)],
+    diceStates: Object.fromEntries(
+      diceDefinitions.map((definition) => [
+        definition.id,
+        {
+          id: definition.id,
+          kind: definition.kind,
+          orientation: cloneOrientation(definition.initialOrientation),
+        } satisfies PersistedDiceState,
+      ]),
+    ) as Record<DiceKind, PersistedDiceState>,
+  }
+}
+
+export function createInitialSessionCalendarState(): SessionCalendarState {
+  return {
+    selectedDiceId: null,
+    previewOrientation: null,
+  }
+}
+
+export function resolveDisplayedOrientations(
+  diceStates: PersistedCalendarState['diceStates'],
+  sessionState: SessionCalendarState,
+): Record<DiceKind, DiceOrientation> {
   return Object.fromEntries(
-    diceDefinitions.map((definition) => [
-      definition.id,
-      {
-        id: definition.id,
-        kind: definition.kind,
-        status: 'idle',
-        confirmedOrientation: cloneOrientation(definition.initialOrientation),
-        previewOrientation: cloneOrientation(definition.initialOrientation),
-      },
+    Object.entries(diceStates).map(([diceId, diceState]) => [
+      diceId,
+      sessionState.selectedDiceId === diceId && sessionState.previewOrientation
+        ? sessionState.previewOrientation
+        : diceState.orientation,
     ]),
-  ) as Record<DiceKind, DiceRuntimeState>
+  ) as Record<DiceKind, DiceOrientation>
 }
 
 export function getDiceDefinition(kind: DiceKind): DiceDefinition {

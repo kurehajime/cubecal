@@ -1,19 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
-import { diceKinds } from './features/calendar/model/types'
 import type { DiceKind, RotationAction } from './features/calendar/model/types'
 import {
   cloneOrientation,
-  createInitialDiceState,
+  createInitialPersistedCalendarState,
+  createInitialSessionCalendarState,
+  resolveDisplayedOrientations,
   rotateDiceOrientation,
 } from './features/calendar/model/state'
 
 function App() {
-  const [diceStates, setDiceStates] = useState(() => createInitialDiceState())
-  const [diceOrder, setDiceOrder] = useState<DiceKind[]>(() => [...diceKinds])
-  const [selectedDiceId, setSelectedDiceId] = useState<DiceKind | null>(null)
+  const [persistedState, setPersistedState] = useState(() =>
+    createInitialPersistedCalendarState(),
+  )
+  const [sessionState, setSessionState] = useState(() =>
+    createInitialSessionCalendarState(),
+  )
   const putAudioRef = useRef<HTMLAudioElement | null>(null)
   const spinAudioRef = useRef<HTMLAudioElement | null>(null)
 
@@ -59,81 +63,65 @@ function App() {
   }
 
   const handleSelectDice = (nextSelectedDiceId: DiceKind | null) => {
-    setDiceStates((current) => {
-      const nextState = { ...current }
-
-      if (selectedDiceId) {
-        const selectedState = current[selectedDiceId]
-
-        nextState[selectedDiceId] = {
-          ...selectedState,
-          previewOrientation: cloneOrientation(selectedState.confirmedOrientation),
-          status: 'idle',
-        }
+    setSessionState(() => {
+      if (!nextSelectedDiceId) {
+        return createInitialSessionCalendarState()
       }
 
-      if (nextSelectedDiceId) {
-        const nextSelectedState = nextState[nextSelectedDiceId]
-
-        nextState[nextSelectedDiceId] = {
-          ...nextSelectedState,
-          previewOrientation: cloneOrientation(nextSelectedState.confirmedOrientation),
-          status: 'selected',
-        }
+      return {
+        selectedDiceId: nextSelectedDiceId,
+        previewOrientation: cloneOrientation(
+          persistedState.diceStates[nextSelectedDiceId].orientation,
+        ),
       }
-
-      return nextState
     })
-
-    setSelectedDiceId(nextSelectedDiceId)
   }
 
   const handleRotate = (action: RotationAction) => {
-    if (!selectedDiceId) {
+    if (!sessionState.selectedDiceId || !sessionState.previewOrientation) {
       return
     }
 
     playSpinSound()
 
-    setDiceStates((current) => {
-      const selectedState = current[selectedDiceId]
-      const nextPreviewOrientation = rotateDiceOrientation(
-        selectedState.previewOrientation,
-        action,
-      )
+    setSessionState((current) => {
+      if (!current.selectedDiceId || !current.previewOrientation) {
+        return current
+      }
+
+      const nextPreviewOrientation = rotateDiceOrientation(current.previewOrientation, action)
 
       return {
         ...current,
-        [selectedDiceId]: {
-          ...selectedState,
-          previewOrientation: nextPreviewOrientation,
-          status: 'selected',
-        },
+        previewOrientation: nextPreviewOrientation,
       }
     })
   }
 
   const handleConfirm = () => {
-    if (!selectedDiceId) {
+    if (!sessionState.selectedDiceId || !sessionState.previewOrientation) {
       return
     }
 
-    setDiceStates((current) => {
-      const selectedState = current[selectedDiceId]
+    const confirmedDiceId = sessionState.selectedDiceId
+    const confirmedOrientation = cloneOrientation(sessionState.previewOrientation)
 
-      return {
-        ...current,
-        [selectedDiceId]: {
-          ...selectedState,
-          confirmedOrientation: cloneOrientation(selectedState.previewOrientation),
-          status: 'confirmed',
+    setPersistedState((current) => ({
+      ...current,
+      diceStates: {
+        ...current.diceStates,
+        [confirmedDiceId]: {
+          ...current.diceStates[confirmedDiceId],
+          orientation: confirmedOrientation,
         },
-      }
-    })
+      },
+    }))
 
-    setSelectedDiceId(null)
+    setSessionState(createInitialSessionCalendarState())
   }
 
+  const selectedDiceId = sessionState.selectedDiceId
+  const diceOrder = persistedState.diceOrder
   const selectedDiceIndex = selectedDiceId ? diceOrder.indexOf(selectedDiceId) : -1
   const canMoveLeft = selectedDiceIndex > 0
   const canMoveRight =
@@ -144,27 +132,31 @@ function App() {
       return
     }
 
-    setDiceOrder((current) => {
-      const currentIndex = current.indexOf(selectedDiceId)
+    setPersistedState((current) => {
+      const currentIndex = current.diceOrder.indexOf(selectedDiceId)
 
       if (currentIndex === -1) {
         return current
       }
 
-      const nextIndex = direction === 'left' ? currentIndex - 1 : currentIndex + 1
+      const nextIndex =
+        direction === 'left' ? currentIndex - 1 : currentIndex + 1
 
-      if (nextIndex < 0 || nextIndex >= current.length) {
+      if (nextIndex < 0 || nextIndex >= current.diceOrder.length) {
         return current
       }
 
-      const nextOrder = [...current]
-        ;[nextOrder[currentIndex], nextOrder[nextIndex]] = [
-          nextOrder[nextIndex],
-          nextOrder[currentIndex],
-        ]
+      const nextOrder = [...current.diceOrder]
+      ;[nextOrder[currentIndex], nextOrder[nextIndex]] = [
+        nextOrder[nextIndex],
+        nextOrder[currentIndex],
+      ]
       playPutSound()
 
-      return nextOrder
+      return {
+        ...current,
+        diceOrder: nextOrder,
+      }
     })
   }
 
@@ -184,11 +176,16 @@ function App() {
     moveSelectedDice('right')
   }
 
+  const displayedOrientations = useMemo(
+    () => resolveDisplayedOrientations(persistedState.diceStates, sessionState),
+    [persistedState.diceStates, sessionState],
+  )
+
   return (
     <main className="app-shell">
       <section className="scene-panel" aria-label="Dice calendar 3D scene">
         <SceneCanvas
-          diceStates={diceStates}
+          diceOrientations={displayedOrientations}
           diceOrder={diceOrder}
           selectedDiceId={selectedDiceId}
           onSelectDice={handleSelectDice}

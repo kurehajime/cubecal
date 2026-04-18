@@ -55,12 +55,18 @@ export type DiceDefinition = {
   initialOrientation: DiceOrientation
 }
 
-export type DiceStatus = 'idle' | 'selected' | 'rotating' | 'confirmed'
-
-export type DiceRuntimeState = {
+export type PersistedDiceState = {
   id: DiceKind
   kind: DiceKind
-  status: DiceStatus
-  confirmedOrientation: DiceOrientation
-  previewOrientation: DiceOrientation
+  orientation: DiceOrientation
+}
+
+export type PersistedCalendarState = {
+  diceOrder: DiceKind[]
+  diceStates: Record<DiceKind, PersistedDiceState>
+}
+
+export type SessionCalendarState = {
+  selectedDiceId: DiceKind | null
+  previewOrientation: DiceOrientation | null
 }

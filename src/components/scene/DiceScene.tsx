@@ -1,6 +1,6 @@
 import type {
   DiceKind,
-  DiceRuntimeState,
+  DiceOrientation,
 } from '../../features/calendar/model/types'
 import { Physics } from '@react-three/rapier'
 import { ContactShadows } from '@react-three/drei'
@@ -9,7 +9,7 @@ import { CalendarBase } from '../stage/CalendarBase'
 import { diceDefinitions } from '../../features/calendar/model/definitions'
 
 type DiceSceneProps = {
-  diceStates: Record<DiceKind, DiceRuntimeState>
+  diceOrientations: Record<DiceKind, DiceOrientation>
   diceOrder: DiceKind[]
   onPutSound: () => void
   selectedDiceId: DiceKind | null
@@ -17,7 +17,7 @@ type DiceSceneProps = {
 }
 
 export function DiceScene({
-  diceStates,
+  diceOrientations,
   diceOrder,
   onPutSound,
   selectedDiceId,
@@ -35,11 +35,7 @@ export function DiceScene({
               definition={definition}
               isSelected={selectedDiceId === definition.id}
               onPutSound={onPutSound}
-              orientationValue={
-                selectedDiceId === definition.id
-                  ? diceStates[definition.id].previewOrientation.quaternion
-                  : diceStates[definition.id].confirmedOrientation.quaternion
-              }
+              orientationValue={diceOrientations[definition.id].quaternion}
               onSelect={onSelectDice}
             />
           ))}

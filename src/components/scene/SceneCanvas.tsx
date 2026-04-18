@@ -1,13 +1,13 @@
 import type {
   DiceKind,
-  DiceRuntimeState,
+  DiceOrientation,
 } from '../../features/calendar/model/types'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { DiceScene } from './DiceScene'
 
 type SceneCanvasProps = {
-  diceStates: Record<DiceKind, DiceRuntimeState>
+  diceOrientations: Record<DiceKind, DiceOrientation>
   diceOrder: DiceKind[]
   onPutSound: () => void
   selectedDiceId: DiceKind | null
@@ -15,7 +15,7 @@ type SceneCanvasProps = {
 }
 
 export function SceneCanvas({
-  diceStates,
+  diceOrientations,
   diceOrder,
   onPutSound,
   selectedDiceId,
@@ -52,7 +52,7 @@ export function SceneCanvas({
         position={[-6, 3, -4]}
       />
       <DiceScene
-        diceStates={diceStates}
+        diceOrientations={diceOrientations}
         diceOrder={diceOrder}
         onPutSound={onPutSound}
         onSelectDice={onSelectDice}
