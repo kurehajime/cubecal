@@ -11,7 +11,9 @@
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  background: #d2dfe0;
+  background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.26), transparent 42%),
+    linear-gradient(180deg, #d9e5e6 0%, #d2dfe0 52%, #cad8d9 100%);
 }
 
 * {
