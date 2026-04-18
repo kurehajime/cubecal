@@ -1,8 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { Howl } from 'howler'
+import { useMemo, useState } from 'react'
 import './App.css'
-import putAudioUrl from './assets/media/put.mp3'
-import spinAudioUrl from './assets/media/spin.mp3'
 import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
 import type { DiceKind, RotationAction } from './features/calendar/model/types'
@@ -21,53 +18,6 @@ function App() {
   const [sessionState, setSessionState] = useState(() =>
     createInitialSessionCalendarState(),
   )
-  const putAudioRef = useRef<Howl | null>(null)
-  const spinAudioRef = useRef<Howl | null>(null)
-
-  useEffect(() => {
-    const putAudio = new Howl({
-      src: [putAudioUrl],
-      preload: true,
-      volume: 0.03,
-    })
-    putAudioRef.current = putAudio
-
-    const spinAudio = new Howl({
-      src: [spinAudioUrl],
-      preload: true,
-      volume: 0.1,
-    })
-    spinAudioRef.current = spinAudio
-
-    return () => {
-      putAudio.unload()
-      spinAudio.unload()
-      putAudioRef.current = null
-      spinAudioRef.current = null
-    }
-  }, [])
-
-  const playPutSound = () => {
-    const audio = putAudioRef.current
-
-    if (!audio) {
-      return
-    }
-
-    audio.stop()
-    void audio.play()
-  }
-
-  const playSpinSound = () => {
-    const audio = spinAudioRef.current
-
-    if (!audio) {
-      return
-    }
-
-    audio.stop()
-    void audio.play()
-  }
 
   const handleSelectDice = (nextSelectedDiceId: DiceKind | null) => {
     setSessionState(() => {
@@ -88,8 +38,6 @@ function App() {
     if (!sessionState.selectedDiceId || !sessionState.previewOrientation) {
       return
     }
-
-    playSpinSound()
 
     setSessionState((current) => {
       if (!current.selectedDiceId || !current.previewOrientation) {
@@ -158,7 +106,6 @@ function App() {
         nextOrder[nextIndex],
         nextOrder[currentIndex],
       ]
-      playPutSound()
 
       return {
         ...current,
@@ -194,9 +141,8 @@ function App() {
         <SceneCanvas
           diceOrientations={displayedOrientations}
           diceOrder={diceOrder}
-          selectedDiceId={selectedDiceId}
           onSelectDice={handleSelectDice}
-          onPutSound={playPutSound}
+          selectedDiceId={selectedDiceId}
         />
         <SelectionOverlay
           canMoveLeft={canMoveLeft}

@@ -23,7 +23,6 @@ type PlaceholderDieProps = {
   basePositionValue: [number, number, number]
   definition: DiceDefinition
   isSelected: boolean
-  onPutSound: () => void
   orientationValue: [number, number, number, number]
   onSelect: (diceId: DiceDefinition['id']) => void
 }
@@ -32,7 +31,6 @@ export function PlaceholderDie({
   basePositionValue,
   definition,
   isSelected,
-  onPutSound,
   orientationValue,
   onSelect,
 }: PlaceholderDieProps) {
@@ -97,10 +95,6 @@ export function PlaceholderDie({
         isSelected ? baseTargetQuaternion : groupRef.current.quaternion,
       )
       motionPhase.current = isSelected ? 'enterForward' : 'exitForward'
-
-      if (isSelected) {
-        onPutSound()
-      }
     }
 
     switch (motionPhase.current) {
@@ -207,7 +201,6 @@ export function PlaceholderDie({
 
         if (completed) {
           motionPhase.current = 'idle'
-          onPutSound()
         }
 
         return
