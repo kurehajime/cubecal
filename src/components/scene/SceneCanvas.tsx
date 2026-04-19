@@ -14,13 +14,15 @@ const DEFAULT_CONTROLS_TARGET: [number, number, number] = [0, -0.28, 0]
 type SceneCanvasProps = {
   diceOrientations: Record<DiceKind, DiceOrientation>
   diceOrder: DiceKind[]
+  onBackgroundInteract: () => void
   selectedDiceId: DiceKind | null
-  onSelectDice: (diceId: DiceKind | null) => void
+  onSelectDice: (diceId: DiceKind) => void
 }
 
 export function SceneCanvas({
   diceOrientations,
   diceOrder,
+  onBackgroundInteract,
   selectedDiceId,
   onSelectDice,
 }: SceneCanvasProps) {
@@ -44,7 +46,7 @@ export function SceneCanvas({
       gl={{ alpha: true }}
       shadows
       dpr={[1, 1.75]}
-      onPointerMissed={() => onSelectDice(null)}
+      onPointerMissed={onBackgroundInteract}
     >
       <fog attach="fog" args={['#efe6d8', 10, 21]} />
       <hemisphereLight args={['#fff8ef', '#b28b68', 1]} />

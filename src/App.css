@@ -27,6 +27,22 @@
   width: var(--panel-width);
 }
 
+.scene-panel__save-feedback {
+  pointer-events: none;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 4;
+}
+
+.scene-panel__save-feedback-icon {
+  animation: scene-panel-save-spin 1000ms linear forwards;
+  display: block;
+  height: 2.35rem;
+  opacity: 0.5;
+  width: 2.35rem;
+}
+
 .scene-panel__content {
   height: 100%;
   opacity: 0;
@@ -42,6 +58,18 @@
   display: block;
   height: 100% !important;
   width: 100% !important;
+}
+
+@keyframes scene-panel-save-spin {
+  from {
+    opacity: 0.5;
+    transform: rotate(0deg);
+  }
+
+  to {
+    opacity: 0.5;
+    transform: rotate(360deg);
+  }
 }
 
 .selection-overlay {
@@ -207,8 +235,8 @@
 
 .selection-overlay__confirm::after {
   background: linear-gradient(180deg,
-      rgba(86, 232, 152, 0.92),
-      rgba(22, 164, 99, 0.82));
+      rgba(58, 246, 149, 0.985),
+      rgba(0, 182, 96, 0.96));
   box-shadow:
     inset 1px 1px 5px rgba(184, 255, 216, 0.2),
     inset -1px -1px 3px rgba(8, 77, 43, 0.24),
@@ -217,8 +245,8 @@
 
 .selection-overlay__confirm:hover::after {
   background: linear-gradient(180deg,
-      rgba(98, 240, 164, 0.96),
-      rgba(26, 176, 106, 0.88));
+      rgba(70, 250, 158, 1),
+      rgba(0, 196, 102, 0.98));
 }
 
 @media (max-width: 720px) {
