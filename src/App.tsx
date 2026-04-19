@@ -1,8 +1,17 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
-import type { DiceKind, RotationAction } from './features/calendar/model/types'
+import {
+  bootstrapCalendarState,
+  saveCalendarState,
+  subscribeToCalendarState,
+} from './features/calendar/data/realtimeDatabase'
+import type {
+  DiceKind,
+  PersistedCalendarState,
+  RotationAction,
+} from './features/calendar/model/types'
 import {
   cloneOrientation,
   createInitialPersistedCalendarState,
@@ -10,6 +19,7 @@ import {
   resolveDisplayedOrientations,
   rotateDiceOrientation,
 } from './features/calendar/model/state'
+import { isFirebaseConfigured } from './lib/firebase/client'
 
 function App() {
   const [persistedState, setPersistedState] = useState(() =>
@@ -18,6 +28,39 @@ function App() {
   const [sessionState, setSessionState] = useState(() =>
     createInitialSessionCalendarState(),
   )
+
+  useEffect(() => {
+    if (!isFirebaseConfigured()) {
+      return
+    }
+
+    void bootstrapCalendarState()
+
+    return subscribeToCalendarState(
+      (nextState) => {
+        setPersistedState(nextState)
+      },
+      (error) => {
+        console.error('Failed to sync calendar state from Realtime Database.', error)
+      },
+    )
+  }, [])
+
+  const commitPersistedState = (
+    updater: (current: PersistedCalendarState) => PersistedCalendarState,
+  ) => {
+    setPersistedState((current) => {
+      const nextState = updater(current)
+
+      if (nextState !== current) {
+        void saveCalendarState(nextState).catch((error) => {
+          console.error('Failed to save calendar state to Realtime Database.', error)
+        })
+      }
+
+      return nextState
+    })
+  }
 
   const handleSelectDice = (nextSelectedDiceId: DiceKind | null) => {
     setSessionState(() => {
@@ -61,7 +104,7 @@ function App() {
     const confirmedDiceId = sessionState.selectedDiceId
     const confirmedOrientation = cloneOrientation(sessionState.previewOrientation)
 
-    setPersistedState((current) => ({
+    commitPersistedState((current) => ({
       ...current,
       diceStates: {
         ...current.diceStates,
@@ -87,7 +130,7 @@ function App() {
       return
     }
 
-    setPersistedState((current) => {
+    commitPersistedState((current) => {
       const currentIndex = current.diceOrder.indexOf(selectedDiceId)
 
       if (currentIndex === -1) {

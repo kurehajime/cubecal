@@ -58,6 +58,17 @@ function quaternionFromQuarterTurns(
   )
 }
 
+export function createOrientationFromQuarterTurns(
+  quarterTurns: QuarterTurnVector,
+): DiceOrientation {
+  const quaternion = quaternionFromQuarterTurns(quarterTurns)
+
+  return {
+    quarterTurns: { ...quarterTurns },
+    quaternion: toQuaternionTuple(quaternion),
+  }
+}
+
 function findNearestQuarterTurns(
   quaternion: Quaternion,
 ): QuarterTurnVector {

@@ -1,0 +1,55 @@
+{
+  "rules": {
+    "calendar": {
+      "current": {
+        ".read": true,
+        ".write": "newData.exists() && newData.hasChildren(['version', 'diceOrder', 'diceOrientations']) && newData.child('version').val() === 1 && newData.child('diceOrder').hasChildren(['slot0', 'slot1', 'slot2', 'slot3']) && newData.child('diceOrder/slot0').isString() && newData.child('diceOrder/slot1').isString() && newData.child('diceOrder/slot2').isString() && newData.child('diceOrder/slot3').isString() && (newData.child('diceOrder/slot0').val() === 'month' || newData.child('diceOrder/slot0').val() === 'weekday' || newData.child('diceOrder/slot0').val() === 'dateTens' || newData.child('diceOrder/slot0').val() === 'dateOnes') && (newData.child('diceOrder/slot1').val() === 'month' || newData.child('diceOrder/slot1').val() === 'weekday' || newData.child('diceOrder/slot1').val() === 'dateTens' || newData.child('diceOrder/slot1').val() === 'dateOnes') && (newData.child('diceOrder/slot2').val() === 'month' || newData.child('diceOrder/slot2').val() === 'weekday' || newData.child('diceOrder/slot2').val() === 'dateTens' || newData.child('diceOrder/slot2').val() === 'dateOnes') && (newData.child('diceOrder/slot3').val() === 'month' || newData.child('diceOrder/slot3').val() === 'weekday' || newData.child('diceOrder/slot3').val() === 'dateTens' || newData.child('diceOrder/slot3').val() === 'dateOnes') && newData.child('diceOrder/slot0').val() !== newData.child('diceOrder/slot1').val() && newData.child('diceOrder/slot0').val() !== newData.child('diceOrder/slot2').val() && newData.child('diceOrder/slot0').val() !== newData.child('diceOrder/slot3').val() && newData.child('diceOrder/slot1').val() !== newData.child('diceOrder/slot2').val() && newData.child('diceOrder/slot1').val() !== newData.child('diceOrder/slot3').val() && newData.child('diceOrder/slot2').val() !== newData.child('diceOrder/slot3').val() && newData.child('diceOrientations').hasChildren(['month', 'weekday', 'dateTens', 'dateOnes'])",
+        "version": {
+          ".validate": "newData.isNumber() && newData.val() === 1"
+        },
+        "diceOrder": {
+          ".validate": "newData.hasChildren(['slot0', 'slot1', 'slot2', 'slot3'])",
+          "slot0": {
+            ".validate": "newData.isString() && (newData.val() === 'month' || newData.val() === 'weekday' || newData.val() === 'dateTens' || newData.val() === 'dateOnes')"
+          },
+          "slot1": {
+            ".validate": "newData.isString() && (newData.val() === 'month' || newData.val() === 'weekday' || newData.val() === 'dateTens' || newData.val() === 'dateOnes')"
+          },
+          "slot2": {
+            ".validate": "newData.isString() && (newData.val() === 'month' || newData.val() === 'weekday' || newData.val() === 'dateTens' || newData.val() === 'dateOnes')"
+          },
+          "slot3": {
+            ".validate": "newData.isString() && (newData.val() === 'month' || newData.val() === 'weekday' || newData.val() === 'dateTens' || newData.val() === 'dateOnes')"
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "diceOrientations": {
+          ".validate": "newData.hasChildren(['month', 'weekday', 'dateTens', 'dateOnes'])",
+          "$diceKind": {
+            ".validate": "($diceKind === 'month' || $diceKind === 'weekday' || $diceKind === 'dateTens' || $diceKind === 'dateOnes') && newData.hasChildren(['x', 'y', 'z'])",
+            "x": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3 && newData.val() % 1 === 0"
+            },
+            "y": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3 && newData.val() % 1 === 0"
+            },
+            "z": {
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 3 && newData.val() % 1 === 0"
+            },
+            "$other": {
+              ".validate": false
+            }
+          },
+          "$other": {
+            ".validate": false
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    }
+  }
+}
