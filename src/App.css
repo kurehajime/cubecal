@@ -27,22 +27,6 @@
   width: var(--panel-width);
 }
 
-.scene-panel__save-feedback {
-  pointer-events: none;
-  position: absolute;
-  right: 1rem;
-  top: 1rem;
-  z-index: 4;
-}
-
-.scene-panel__save-feedback-icon {
-  animation: scene-panel-save-spin 1000ms linear forwards;
-  display: block;
-  height: 2.35rem;
-  opacity: 0.40;
-  width: 2.35rem;
-}
-
 .scene-panel__content {
   height: 100%;
   opacity: 0;
@@ -58,18 +42,6 @@
   display: block;
   height: 100% !important;
   width: 100% !important;
-}
-
-@keyframes scene-panel-save-spin {
-  from {
-    opacity: 0.40;
-    transform: rotate(0deg);
-  }
-
-  to {
-    opacity: 0.40;
-    transform: rotate(360deg);
-  }
 }
 
 .selection-overlay {

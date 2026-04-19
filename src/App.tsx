@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
-import reloadIconUrl from './assets/icons/reload.svg'
 import {
   bootstrapCalendarState,
   saveCalendarState,
@@ -26,7 +25,6 @@ type SyncStatus = 'loading' | 'ready' | 'error'
 
 function App() {
   const firebaseConfigured = isFirebaseConfigured()
-  const saveFeedbackTimeoutRef = useRef<number | null>(null)
   const [persistedState, setPersistedState] = useState(() =>
     createInitialPersistedCalendarState(),
   )
@@ -37,7 +35,6 @@ function App() {
     firebaseConfigured ? 'loading' : 'ready',
   )
   const [isSceneFadedIn, setIsSceneFadedIn] = useState(false)
-  const [saveFeedbackPulse, setSaveFeedbackPulse] = useState(0)
 
   useEffect(() => {
     if (!firebaseConfigured) {
@@ -68,30 +65,13 @@ function App() {
       const nextState = updater(current)
 
       if (nextState !== current) {
-        void saveCalendarState(nextState)
-          .then(() => {
-            triggerSaveFeedback()
-          })
-          .catch((error) => {
-            console.error('Failed to save calendar state to Realtime Database.', error)
-          })
+        void saveCalendarState(nextState).catch((error) => {
+          console.error('Failed to save calendar state to Realtime Database.', error)
+        })
       }
 
       return nextState
     })
-  }
-
-  const triggerSaveFeedback = () => {
-    setSaveFeedbackPulse((current) => current + 1)
-
-    if (saveFeedbackTimeoutRef.current !== null) {
-      window.clearTimeout(saveFeedbackTimeoutRef.current)
-    }
-
-    saveFeedbackTimeoutRef.current = window.setTimeout(() => {
-      setSaveFeedbackPulse(0)
-      saveFeedbackTimeoutRef.current = null
-    }, 700)
   }
 
   const handleSelectDice = (nextSelectedDiceId: DiceKind | null) => {
@@ -225,30 +205,9 @@ function App() {
     }
   }, [isCalendarVisible, isSceneFadedIn])
 
-  useEffect(() => {
-    return () => {
-      if (saveFeedbackTimeoutRef.current !== null) {
-        window.clearTimeout(saveFeedbackTimeoutRef.current)
-      }
-    }
-  }, [])
-
   return (
     <main className="app-shell">
       <section className="scene-panel" aria-label="Cube calendar 3D scene">
-        {saveFeedbackPulse > 0 ? (
-          <div
-            key={saveFeedbackPulse}
-            className="scene-panel__save-feedback"
-            aria-hidden="true"
-          >
-            <img
-              src={reloadIconUrl}
-              alt=""
-              className="scene-panel__save-feedback-icon"
-            />
-          </div>
-        ) : null}
         {isCalendarVisible ? (
           <div
             className={`scene-panel__content${
