@@ -43,8 +43,8 @@ export const cloudCalendarStateSchema = z.object({
   diceOrientations: z.object({
     month: quarterTurnVectorSchema,
     weekday: quarterTurnVectorSchema,
-    dateTens: quarterTurnVectorSchema,
-    dateOnes: quarterTurnVectorSchema,
+    date012678: quarterTurnVectorSchema,
+    date012345: quarterTurnVectorSchema,
   }),
 })
 
@@ -64,8 +64,8 @@ export function toCloudCalendarState(
     diceOrientations: {
       month: state.diceStates.month.orientation.quarterTurns,
       weekday: state.diceStates.weekday.orientation.quarterTurns,
-      dateTens: state.diceStates.dateTens.orientation.quarterTurns,
-      dateOnes: state.diceStates.dateOnes.orientation.quarterTurns,
+      date012678: state.diceStates.date012678.orientation.quarterTurns,
+      date012345: state.diceStates.date012345.orientation.quarterTurns,
     },
   }
 }
@@ -94,15 +94,15 @@ export function fromCloudCalendarState(
         'weekday',
         state.diceOrientations.weekday,
       ),
-      dateTens: createPersistedDiceState(
+      date012678: createPersistedDiceState(
         initialState,
-        'dateTens',
-        state.diceOrientations.dateTens,
+        'date012678',
+        state.diceOrientations.date012678,
       ),
-      dateOnes: createPersistedDiceState(
+      date012345: createPersistedDiceState(
         initialState,
-        'dateOnes',
-        state.diceOrientations.dateOnes,
+        'date012345',
+        state.diceOrientations.date012345,
       ),
     },
   }

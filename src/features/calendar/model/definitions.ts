@@ -47,8 +47,8 @@ export const diceFaceLabelsByKind: Record<DiceKind, DiceFaceLabels> = {
     'JAN/JUL',
   ]),
   weekday: createFaceLabels(['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT/SUN']),
-  dateTens: createFaceLabels(['0', '1', '2', '6', '7', '8']),
-  dateOnes: createFaceLabels(['0', '1', '2', '3', '4', '5']),
+  date012678: createFaceLabels(['0', '1', '2', '6', '7', '8']),
+  date012345: createFaceLabels(['0', '1', '2', '3', '4', '5']),
 }
 
 export const diceDefinitions: DiceDefinition[] = [
@@ -76,10 +76,10 @@ export const diceDefinitions: DiceDefinition[] = [
     initialOrientation: identityOrientation,
   },
   {
-    id: 'dateTens',
-    kind: 'dateTens',
+    id: 'date012678',
+    kind: 'date012678',
     color: '#EC008C',
-    faces: diceFaceLabelsByKind.dateTens,
+    faces: diceFaceLabelsByKind.date012678,
     placement: {
       basePosition: [0.54, 0.54, 0.02],
       baseRotation: [-0.32, 0, 0],
@@ -87,10 +87,10 @@ export const diceDefinitions: DiceDefinition[] = [
     initialOrientation: identityOrientation,
   },
   {
-    id: 'dateOnes',
-    kind: 'dateOnes',
+    id: 'date012345',
+    kind: 'date012345',
     color: '#FFF500',
-    faces: diceFaceLabelsByKind.dateOnes,
+    faces: diceFaceLabelsByKind.date012345,
     placement: {
       basePosition: [1.62, 0.54, 0.02],
       baseRotation: [-0.32, 0, 0],

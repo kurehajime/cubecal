@@ -1,4 +1,9 @@
-export const diceKinds = ['month', 'weekday', 'dateTens', 'dateOnes'] as const
+export const diceKinds = [
+  'month',
+  'weekday',
+  'date012678',
+  'date012345',
+] as const
 
 export type DiceKind = (typeof diceKinds)[number]
 
