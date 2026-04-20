@@ -1,4 +1,4 @@
 # Cube Calendar
 [
-![](https://github.com/user-attachments/assets/722df4e4-deae-4af0-87b6-b1fa5763db21)
+![](https://github.com/user-attachments/assets/c042b6fe-a3c6-4a27-b7e3-08bbf2484dea)
 ](https://cubecalendar.asweb.app/)
