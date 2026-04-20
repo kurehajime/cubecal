@@ -2,7 +2,6 @@ import type {
   DiceKind,
   DiceOrientation,
 } from '../../features/calendar/model/types'
-import { Physics } from '@react-three/rapier'
 import { ContactShadows } from '@react-three/drei'
 import { PlaceholderDie } from '../dice/PlaceholderDie'
 import { CalendarBase } from '../stage/CalendarBase'
@@ -24,19 +23,17 @@ export function DiceScene({
   return (
     <>
       <group position={[0, -0.92, 0]}>
-        <Physics gravity={[0, -9.81, 0]}>
-          <CalendarBase />
-          {diceDefinitions.map((definition) => (
-            <PlaceholderDie
-              basePositionValue={getOrderedBasePosition(definition.id, diceOrder)}
-              key={definition.id}
-              definition={definition}
-              isSelected={selectedDiceId === definition.id}
-              orientationValue={diceOrientations[definition.id].quaternion}
-              onSelect={onSelectDice}
-            />
-          ))}
-        </Physics>
+        <CalendarBase />
+        {diceDefinitions.map((definition) => (
+          <PlaceholderDie
+            basePositionValue={getOrderedBasePosition(definition.id, diceOrder)}
+            key={definition.id}
+            definition={definition}
+            isSelected={selectedDiceId === definition.id}
+            orientationValue={diceOrientations[definition.id].quaternion}
+            onSelect={onSelectDice}
+          />
+        ))}
       </group>
 
       <ContactShadows
