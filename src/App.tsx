@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
-import { SceneCanvas } from './components/scene/SceneCanvas'
 import { SelectionOverlay } from './components/overlay/SelectionOverlay'
 import {
   bootstrapCalendarState,
@@ -22,6 +21,9 @@ import {
 import { isFirebaseConfigured } from './lib/firebase/client'
 
 type SyncStatus = 'loading' | 'ready' | 'error'
+type SceneCanvasComponent = typeof import('./components/scene/SceneCanvas')['SceneCanvas']
+
+const loadSceneCanvas = () => import('./components/scene/SceneCanvas')
 
 function App() {
   const firebaseConfigured = isFirebaseConfigured()
@@ -35,10 +37,22 @@ function App() {
     firebaseConfigured ? 'loading' : 'ready',
   )
   const [isSceneFadedIn, setIsSceneFadedIn] = useState(false)
+  const [SceneCanvas, setSceneCanvas] =
+    useState<SceneCanvasComponent | null>(null)
 
   useEffect(() => {
+    let isActive = true
+
+    void loadSceneCanvas().then((module) => {
+      if (isActive) {
+        setSceneCanvas(() => module.SceneCanvas)
+      }
+    })
+
     if (!firebaseConfigured) {
-      return
+      return () => {
+        isActive = false
+      }
     }
 
     void bootstrapCalendarState().catch((error) => {
@@ -46,7 +60,7 @@ function App() {
       console.error('Failed to bootstrap calendar state from Realtime Database.', error)
     })
 
-    return subscribeToCalendarState(
+    const unsubscribe = subscribeToCalendarState(
       (nextState) => {
         setPersistedState(nextState)
         setSyncStatus('ready')
@@ -56,6 +70,11 @@ function App() {
         console.error('Failed to sync calendar state from Realtime Database.', error)
       },
     )
+
+    return () => {
+      isActive = false
+      unsubscribe()
+    }
   }, [firebaseConfigured])
 
   const commitPersistedState = (
@@ -208,7 +227,7 @@ function App() {
   return (
     <main className="app-shell">
       <section className="scene-panel" aria-label="Cube calendar 3D scene">
-        {isCalendarVisible ? (
+        {isCalendarVisible && SceneCanvas ? (
           <div
             className={`scene-panel__content${
               isSceneFadedIn ? ' scene-panel__content--visible' : ''
