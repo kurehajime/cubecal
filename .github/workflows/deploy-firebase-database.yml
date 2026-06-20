@@ -22,17 +22,26 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Authenticate to Google Cloud
+        id: auth
         uses: google-github-actions/auth@v3
         with:
           credentials_json: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: 26
+          node-version: 24
 
       - name: Install Firebase CLI
         run: npm install --global firebase-tools
 
+      - name: Check Firebase authentication
+        run: firebase projects:list --non-interactive
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
+
       - name: Deploy Realtime Database Rules
         run: firebase deploy --only database --project "${{ secrets.FIREBASE_PROJECT_ID }}" --non-interactive
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.auth.outputs.credentials_file_path }}
