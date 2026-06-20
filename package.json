@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@fontsource/archivo-black": "^5.2.8",
-    "@mael-667/liquid-glass-react": "^1.0.2",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.6.0",
     "firebase": "^12.13.0",

@@ -74,6 +74,7 @@
   isolation: isolate;
   justify-content: center;
   margin: 0;
+  overflow: hidden;
   padding: 0;
   pointer-events: auto;
   position: absolute;
@@ -88,7 +89,13 @@
 }
 
 .selection-overlay__button::before {
+  background: rgba(255, 255, 255, 0.18);
   backdrop-filter: blur(10px) saturate(1.18);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -2;
 }
 
 .selection-overlay__button::after {
@@ -99,6 +106,11 @@
     inset 1px 1px 4px rgba(255, 255, 255, 0.38),
     inset -1px -1px 2px rgba(73, 49, 28, 0.1),
     0 4px 10px rgba(58, 40, 25, 0.05);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: -1;
 }
 
 .selection-overlay__button:hover::after {

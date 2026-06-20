@@ -7,7 +7,6 @@ import confirmIconUrl from '../../assets/icons/check.svg'
 import downArrowIconUrl from '../../assets/icons/down_arrow.svg'
 import rightMoveIconUrl from '../../assets/icons/rigit_move.svg'
 import rightSpinIconUrl from '../../assets/icons/rigit_spin.svg'
-import { LiquidGlass } from '@mael-667/liquid-glass-react'
 
 type SelectionOverlayProps = {
   canMoveLeft: boolean
@@ -160,8 +159,7 @@ function OverlayGlassButton({
   onClick,
 }: OverlayGlassButtonProps) {
   return (
-    <LiquidGlass
-      as="button"
+    <button
       type="button"
       className={`selection-overlay__button ${className}`}
       onClick={onClick}
@@ -169,6 +167,6 @@ function OverlayGlassButton({
       disabled={disabled}
     >
       {children}
-    </LiquidGlass>
+    </button>
   )
 }
