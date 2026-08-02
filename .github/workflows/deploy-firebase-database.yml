@@ -29,7 +29,7 @@ jobs:
           project_id: ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
 
